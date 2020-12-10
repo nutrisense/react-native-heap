@@ -24,12 +24,13 @@ import { bailOnError } from './util/bailer';
 import { getContextualProps } from './util/contextualProps';
 
 const flatten = require('flat');
-const RNHeap = NativeModules.RNHeap;
+const RNAnalytics = NativeModules.RNAnalytics;
 
 const autocaptureTrack = bailOnError((event, payload) => {
   try {
-    RNHeap.autocaptureEvent(event, payload);
-
+    if (RNAnalytics) {
+      RNAnalytics.track(event, payload, {}, {});
+    }
     checkDisplayNamePlugin();
   } catch (e) {
     console.log('Error autocapturing Heap event.\n', e);
@@ -45,7 +46,9 @@ const manualTrack = bailOnError((event, payload) => {
     const contextualProps = getContextualProps();
 
     payload = payload || {};
-    RNHeap.manuallyTrackEvent(event, flatten(payload), contextualProps);
+    if (RNAnalytics) {
+      RNAnalytics.track(event, flatten(payload), contextualProps, {});
+    }
   } catch (e) {
     console.log('Error calling Heap.track\n', e);
   }

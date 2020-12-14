@@ -106,16 +106,7 @@ export const withReactNavigationAutotrack = track => AppContainer => {
               this.topLevelNavigator !== navigatorRef &&
               navigatorRef !== null
             ) {
-              console.log(
-                'Heap: React Navigation is instrumented for autocapture.'
-              );
               this.topLevelNavigator = navigatorRef;
-              if (this.topLevelNavigator.state) {
-                // We're on React Navigation 4, so track the initial route now.
-                this.trackInitialRouteForState(
-                  this.topLevelNavigator.state.nav
-                );
-              }
             }
           })}
           onReady={(...args) => {
